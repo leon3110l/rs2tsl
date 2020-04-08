@@ -16,23 +16,18 @@ def create_tsl(dlc_json):
             tone_name = tone['Name']
             tone_desc = tone['ToneDescriptors']
 
-            with open('clean_patch.tsl') as clean_patch:
-                tsl = json.load(clean_patch)
+            print()
+            print()
+            print(tone_name)
+            print("-------------")
 
-                print()
-                print()
-                print(tone_name)
-                print("-------------")
-
-                params = tsl['patchList']['params']
-
-                
-
-                for key, item in tone["GearList"].items():
-                    print(item['Type'] + " - " + item['Key'])
+            for key, item in tone["GearList"].items():
+                print(item['Type'] + " - " + item['Key'])
+                if(key == 'Amp'):
+                    print(json.dumps(item['KnobValues'], indent=4))
 
 def create_tsl_from_psarc(psarc: Path):
-    welder = Welder(path, "r")
+    welder = Welder(psarc, "r")
     for index in welder:
         file_name = welder.arc_name(index)
         if("manifest" in file_name and file_name.endswith(".json") and not file_name.endswith("vocals.json")):
@@ -41,9 +36,8 @@ def create_tsl_from_psarc(psarc: Path):
             dlc = json.loads(welder.arc_data(index).decode())
             create_tsl(dlc)
 
-
-
 if __name__ == "__main__":
     # load all psarc files in my folder, rglob for recursive
-    for path in Path('D:/rocksmith dlc backup/').glob("*p.psarc"):
+
+    for path in Path('D:/games/SteamLibrary/steamapps/common/Rocksmith2014/dlc/').glob("*p.psarc"):
         create_tsl_from_psarc(path)
